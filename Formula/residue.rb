@@ -2,7 +2,6 @@
 class Residue < Formula
   desc "Reclaim disk from coding-agent Git worktrees without losing work"
   homepage "https://github.com/whiteheap/residue"
-  version "0.0.1"
   license "MIT"
 
   on_macos do
