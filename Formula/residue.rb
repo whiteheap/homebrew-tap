@@ -6,23 +6,23 @@ class Residue < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/whiteheap/residue/releases/download/v0.0.3/residue-v0.0.3-aarch64-apple-darwin.tar.gz"
-      sha256 "e60877300a1b91df3eb34f1fdb798018aca6523d6bb3d79b4171133e7aa57098"
+      url "https://github.com/whiteheap/residue/releases/download/v0.0.4/residue-v0.0.4-aarch64-apple-darwin.tar.gz"
+      sha256 "4476a27bf6988798326caae17d1f076d191197df910184ca14ac25ca06310a20"
     end
     on_intel do
-      url "https://github.com/whiteheap/residue/releases/download/v0.0.3/residue-v0.0.3-x86_64-apple-darwin.tar.gz"
-      sha256 "7191b6690a4b52801f16dfcbd7434fe2d98b31773f37bbe133229627de66b812"
+      url "https://github.com/whiteheap/residue/releases/download/v0.0.4/residue-v0.0.4-x86_64-apple-darwin.tar.gz"
+      sha256 "4ab9c66a76ca3c1221c5b20f7470d84cdb26aac83d4699033eac7664740e1b98"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/whiteheap/residue/releases/download/v0.0.3/residue-v0.0.3-aarch64-unknown-linux-musl.tar.gz"
-      sha256 "1dd2989e67ce77589bbc4b92d9368741bd7a3515cdd8462e874ea807e02b0d4d"
+      url "https://github.com/whiteheap/residue/releases/download/v0.0.4/residue-v0.0.4-aarch64-unknown-linux-musl.tar.gz"
+      sha256 "94e370e0eba8e60fbf8e9f7016b5c98b3b78a7ae6dd2da3b2ca82a74c8028625"
     end
     on_intel do
-      url "https://github.com/whiteheap/residue/releases/download/v0.0.3/residue-v0.0.3-x86_64-unknown-linux-musl.tar.gz"
-      sha256 "88fb6210cc0506e4811f4672361208440eb47ce197a208935a7d304449874f13"
+      url "https://github.com/whiteheap/residue/releases/download/v0.0.4/residue-v0.0.4-x86_64-unknown-linux-musl.tar.gz"
+      sha256 "521fb8250b7373c25810e655855eb25169e5b83c0b843b4a7750fd7a034103fe"
     end
   end
 
@@ -34,6 +34,8 @@ class Residue < Formula
     <<~EOS
       residue needs git 2.36 or later on PATH.
       `residue scan` only reads. `residue remove` asks before it deletes.
+      To sweep idle worktrees on a schedule (launchd or systemd), see
+        https://github.com/whiteheap/residue#run-it-on-a-schedule
     EOS
   end
 
