@@ -34,9 +34,9 @@ class Residue < Formula
     <<~EOS
       residue needs git 2.36 or later on PATH.
       `residue scan` only reads. `residue remove` asks before it deletes.
-      To clean up automatically, run `residue watch` from login (launchd,
-      systemd) on the folder that holds your repositories:
-        residue service install ~/src
+      To clean up automatically, run this once. It starts `residue watch` now
+      and at every login, on the usual code folders in your home folder:
+        residue service install
       https://github.com/whiteheap/residue#automate-cleanup
     EOS
   end
