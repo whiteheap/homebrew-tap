@@ -76,6 +76,8 @@ jobs:
           mkdir -p "$(dirname "$tap")"
           rm -rf "$tap"
           ln -s "$GITHUB_WORKSPACE" "$tap"
+          # Homebrew 7 loads a formula from a non-official tap only once trusted.
+          brew trust --formula whiteheap/tap/residue
       - name: brew style
         if: steps.update.outputs.updated == 'true' || github.event_name == 'pull_request'
         run: brew style whiteheap/tap/residue
