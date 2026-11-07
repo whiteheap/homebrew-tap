@@ -1,7 +1,7 @@
 # residue: release binaries from https://github.com/whiteheap/residue/releases
 class Residue < Formula
   desc "Reclaim disk from coding-agent Git worktrees without losing work"
-  homepage "https://github.com/whiteheap/residue"
+  homepage "https://residue.whiteheap.com"
   license "MIT"
 
   on_macos do
@@ -34,8 +34,10 @@ class Residue < Formula
     <<~EOS
       residue needs git 2.36 or later on PATH.
       `residue scan` only reads. `residue remove` asks before it deletes.
-      To sweep idle worktrees on a schedule (launchd or systemd), see
-        https://github.com/whiteheap/residue#run-it-on-a-schedule
+      To clean up automatically, run `residue watch` from login (launchd,
+      systemd) on the folder that holds your repositories:
+        residue service install ~/src
+      https://github.com/whiteheap/residue#automate-cleanup
     EOS
   end
 

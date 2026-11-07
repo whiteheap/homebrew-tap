@@ -1,0 +1,93 @@
+name: update residue
+
+# Keeps Formula/residue.rb on the latest whiteheap/residue release, with no
+# manual step and no cross-repository secret: every hour it compares the
+# formula with the latest release, and when the release is newer it rewrites
+# the url and sha256 lines (.github/update-residue.sh), runs brew style, brew
+# audit --strict --online, brew install and brew test, and pushes the commit
+# to main only if all of them pass. A run with nothing new changes nothing.
+#
+# Now instead of within the hour:  gh workflow run update-residue.yml -R whiteheap/homebrew-tap
+# Check a branch, push nothing:     gh workflow run update-residue.yml -R whiteheap/homebrew-tap --ref BRANCH -f dry_run=true
+# GitHub disables a schedule after 60 days without activity in a public
+# repository; then: gh workflow enable update-residue.yml -R whiteheap/homebrew-tap
+#
+# The push uses this run's GITHUB_TOKEN. The ruleset on main forbids only
+# deletion and non-fast-forward pushes, so a fast-forward commit lands; if main
+# moved during the run, the push fails and the next run tries again.
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Update and check the formula, but push nothing
+        type: boolean
+        default: false
+  repository_dispatch:
+    types: [residue-release]
+  # A pull request that changes the formula or this workflow gets the same
+  # checks on the formula as it is, and pushes nothing.
+  pull_request:
+    paths:
+      - "Formula/residue.rb"
+      - ".github/update-residue.sh"
+      - ".github/workflows/update-residue.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: update-residue-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+      HOMEBREW_NO_INSTALL_CLEANUP: "1"
+      HOMEBREW_NO_ANALYTICS: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Point the formula at the latest release
+        id: update
+        if: github.event_name != 'pull_request'
+        run: |
+          sh .github/update-residue.sh | tee "$RUNNER_TEMP/update.log"
+          tail -n1 "$RUNNER_TEMP/update.log" >> "$GITHUB_OUTPUT"
+      - name: Commit
+        if: steps.update.outputs.updated == 'true'
+        run: |
+          version=$(sed -n 's|.*/releases/download/v\([^/]*\)/.*|\1|p' Formula/residue.rb | head -n1)
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "feat: residue $version" -m "Updated by .github/workflows/update-residue.yml from the release's SHA256SUMS."
+      # Homebrew audits a formula through its tap, so this checkout becomes
+      # the whiteheap/tap tap.
+      - name: Tap this checkout
+        if: steps.update.outputs.updated == 'true' || github.event_name == 'pull_request'
+        run: |
+          tap="$(brew --repository)/Library/Taps/whiteheap/homebrew-tap"
+          mkdir -p "$(dirname "$tap")"
+          rm -rf "$tap"
+          ln -s "$GITHUB_WORKSPACE" "$tap"
+      - name: brew style
+        if: steps.update.outputs.updated == 'true' || github.event_name == 'pull_request'
+        run: brew style whiteheap/tap/residue
+      - name: brew audit
+        if: steps.update.outputs.updated == 'true' || github.event_name == 'pull_request'
+        run: brew audit --strict --online --formula whiteheap/tap/residue
+      - name: brew install and brew test
+        if: steps.update.outputs.updated == 'true' || github.event_name == 'pull_request'
+        run: |
+          brew install --formula whiteheap/tap/residue
+          residue --version
+          brew test whiteheap/tap/residue
+      - name: Push to main
+        if: steps.update.outputs.updated == 'true' && github.ref == 'refs/heads/main' && !inputs.dry_run
+        run: git push origin HEAD:main
