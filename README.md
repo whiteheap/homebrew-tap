@@ -8,13 +8,13 @@ brew install whiteheap/tap/residue
 
 | Formula | What it does |
 | --- | --- |
-| [`residue`](https://github.com/whiteheap/residue) | Finds the Git worktrees coding agents leave behind, and removes one only when nothing in it would be lost |
+| [`residue`](https://github.com/whiteheap/residue-cli) | Finds the Git worktrees coding agents leave behind, and removes one only when nothing in it would be lost |
 
 Each formula installs the release binaries that the project's GitHub Actions workflow builds. The formula pins each binary's checksum, and the project repository holds a GitHub build-provenance attestation for each one.
 
 ## Updates arrive by themselves
 
-`.github/workflows/update-residue.yml` runs every hour. When whiteheap/residue has a newer release than `Formula/residue.rb`, `.github/update-residue.sh` rewrites the four `url` and `sha256` lines from the release's `SHA256SUMS`, after checking each archive against that file and its build-provenance attestation. The workflow then runs `brew style`, `brew audit --strict --online`, `brew install` and `brew test`, and pushes the commit to `main` only if all pass. A run with nothing new changes nothing. It needs no secret: the push uses the run's own `GITHUB_TOKEN`, which the ruleset on `main` (no deletion, no force push) allows for a fast-forward commit.
+`.github/workflows/update-residue.yml` runs every hour. When whiteheap/residue-cli has a newer release than `Formula/residue.rb`, `.github/update-residue.sh` rewrites the four `url` and `sha256` lines from the release's `SHA256SUMS`, after checking each archive against that file and its build-provenance attestation. The workflow then runs `brew style`, `brew audit --strict --online`, `brew install` and `brew test`, and pushes the commit to `main` only if all pass. A run with nothing new changes nothing. It needs no secret: the push uses the run's own `GITHUB_TOKEN`, which the ruleset on `main` (no deletion, no force push) allows for a fast-forward commit.
 
 ```sh
 gh workflow run update-residue.yml -R whiteheap/homebrew-tap                             # now, instead of within the hour

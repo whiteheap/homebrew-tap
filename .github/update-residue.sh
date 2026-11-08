@@ -1,7 +1,7 @@
 #!/bin/sh
-# Points Formula/residue.rb at the latest whiteheap/residue release, when that
-# release is newer than the formula. Rewrites only the four url lines and the
-# four sha256 lines; Homebrew reads the version from the url.
+# Points Formula/residue.rb at the latest whiteheap/residue-cli release, when
+# that release is newer than the formula. Rewrites only the four url lines and
+# the four sha256 lines; Homebrew reads the version from the url.
 #
 #   sh .github/update-residue.sh            # the latest release
 #   sh .github/update-residue.sh v0.0.7     # a given tag
@@ -12,7 +12,7 @@
 # Prints "updated=true" or "updated=false" last, for $GITHUB_OUTPUT.
 set -eu
 
-repo=whiteheap/residue
+repo=whiteheap/residue-cli
 formula=Formula/residue.rb
 targets="aarch64-apple-darwin x86_64-apple-darwin aarch64-unknown-linux-musl x86_64-unknown-linux-musl"
 
