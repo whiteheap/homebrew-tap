@@ -1,7 +1,7 @@
 name: update residue
 
-# Keeps Formula/residue.rb on the latest whiteheap/residue release, with no
-# manual step and no cross-repository secret: every hour it compares the
+# Keeps Formula/residue.rb on the latest whiteheap/residue-cli release, with
+# no manual step and no cross-repository secret: every hour it compares the
 # formula with the latest release, and when the release is newer it rewrites
 # the url and sha256 lines (.github/update-residue.sh), runs brew style, brew
 # audit --strict --online, brew install and brew test, and pushes the commit
