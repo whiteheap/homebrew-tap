@@ -6,9 +6,11 @@
 #   sh .github/update-residue.sh            # the latest release
 #   sh .github/update-residue.sh v0.0.7     # a given tag
 #
-# Each checksum comes from the release's SHA256SUMS, and each archive is
-# downloaded, checked against it and against its build-provenance attestation
-# before the formula names it. Needs gh with a token (GH_TOKEN).
+# Each checksum comes from the release's SHA256SUMS. All four archives are
+# downloaded and checked, against SHA256SUMS and against the build-provenance
+# attestation that whiteheap/residue-cli's release.yml made at the tag, before
+# the formula changes at all. Needs gh 2.49 or later with a token (GH_TOKEN);
+# the attestations are public, so the token needs no permission for them.
 # Prints "updated=true" or "updated=false" last, for $GITHUB_OUTPUT.
 set -eu
 
@@ -37,13 +39,24 @@ fi
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 gh release download "$latest" -R "$repo" -p SHA256SUMS -D "$work"
+# Only release.yml at this tag, on a GitHub-hosted runner, builds the four
+# archives. --repo alone would accept an attestation from any workflow in the
+# repository, at any ref, such as the one that builds residue's packages.
+identity="https://github.com/$repo/.github/workflows/release.yml@refs/tags/$latest"
 for target in $targets; do
   name=residue-$latest-$target.tar.gz
   sum=$(awk -v f="$name" '$2 == f { print $1 }' "$work/SHA256SUMS")
   [ "${#sum}" = 64 ] || { echo "SHA256SUMS of $latest has no line for $name" >&2; exit 1; }
   gh release download "$latest" -R "$repo" -p "$name" -D "$work"
   (cd "$work" && printf '%s  %s\n' "$sum" "$name" | shasum -a 256 -c)
-  gh attestation verify "$work/$name" --repo "$repo"
+  gh attestation verify "$work/$name" --repo "$repo" --cert-identity "$identity" --deny-self-hosted-runners ||
+    { echo "$name has no attestation from $identity; the formula is unchanged" >&2; exit 1; }
+  echo "$name: built by $identity"
+  printf '%s %s\n' "$target" "$sum" >>"$work/checked"
+done
+
+# All four passed, so now the formula.
+while read -r target sum; do
   # The url line naming this target gets the new tag; the sha256 line after
   # it gets the new checksum. Nothing else in the file changes.
   awk -v target="$target" -v tag="$latest" -v sum="$sum" '
@@ -55,7 +68,7 @@ for target in $targets; do
     { print }
   ' "$formula" >"$work/residue.rb"
   cat "$work/residue.rb" >"$formula"
-done
+done <"$work/checked"
 
 # Exactly four url lines and four sha256 lines changed, and no old tag is left.
 changed=$(git diff --numstat -- "$formula" | awk '{ print $1 " " $2 }')
