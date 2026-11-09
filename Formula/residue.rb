@@ -1,6 +1,6 @@
 # residue: release binaries from https://github.com/whiteheap/residue-cli/releases
 class Residue < Formula
-  desc "Reclaim disk from coding-agent Git worktrees without losing work"
+  desc "Reclaim storage from Git worktrees without losing work"
   homepage "https://residue.whiteheap.com"
   license "MIT"
 
@@ -33,11 +33,14 @@ class Residue < Formula
   def caveats
     <<~EOS
       residue needs git 2.36 or later on PATH.
-      `residue scan` only reads. `residue remove` asks before it deletes.
+      `residue scan` deletes nothing. `residue remove` asks before it deletes.
       To clean up automatically, run this once. It starts `residue watch` now
-      and at every login, on the usual code folders in your home folder:
+      and at every login, on the usual code folders in your home folder, and
+      deletes worktrees that pass every check, without asking:
         residue service install
       https://github.com/whiteheap/residue-cli#automate-cleanup
+      Turn it off before you uninstall residue:
+        residue service uninstall
     EOS
   end
 
