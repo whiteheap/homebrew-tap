@@ -6,23 +6,23 @@ class Residue < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/whiteheap/residue-cli/releases/download/v0.0.10/residue-v0.0.10-aarch64-apple-darwin.tar.gz"
-      sha256 "271a70f5b161561e0800a8a11611bea829c850fb8c1a1dc14e98f67d05a698da"
+      url "https://github.com/whiteheap/residue-cli/releases/download/v0.0.11/residue-v0.0.11-aarch64-apple-darwin.tar.gz"
+      sha256 "7adb436af9ae8937561dd9d46b2a7a133e3c6f6701b6963ad6a6da91fac37fb3"
     end
     on_intel do
-      url "https://github.com/whiteheap/residue-cli/releases/download/v0.0.10/residue-v0.0.10-x86_64-apple-darwin.tar.gz"
-      sha256 "f6a29012c53bf5ab52dd0b94dff5e33ae39b0ae7d38bd6e36bd7f62859ecc258"
+      url "https://github.com/whiteheap/residue-cli/releases/download/v0.0.11/residue-v0.0.11-x86_64-apple-darwin.tar.gz"
+      sha256 "deee6f3d630f21fb6154760c61192ef057f22b948243ca2a76c4f36115b75e60"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/whiteheap/residue-cli/releases/download/v0.0.10/residue-v0.0.10-aarch64-unknown-linux-musl.tar.gz"
-      sha256 "d5046fb57c8b85ff2ef0c4e648b36c37652d4bbc1d72648ae3476a5827d5d7be"
+      url "https://github.com/whiteheap/residue-cli/releases/download/v0.0.11/residue-v0.0.11-aarch64-unknown-linux-musl.tar.gz"
+      sha256 "1aeab8d217ef7c0541dfed3bb8d99703e93eb455994b7ef37e049075b96fa2c8"
     end
     on_intel do
-      url "https://github.com/whiteheap/residue-cli/releases/download/v0.0.10/residue-v0.0.10-x86_64-unknown-linux-musl.tar.gz"
-      sha256 "fc97ec5adc64c76991d46bcb5918329ddbfa843541f76cb2e036c4af8b503830"
+      url "https://github.com/whiteheap/residue-cli/releases/download/v0.0.11/residue-v0.0.11-x86_64-unknown-linux-musl.tar.gz"
+      sha256 "6a017b723bcc6c78f58a7883b990a92e2f76b3944c00d354897ee58200e8568b"
     end
   end
 
