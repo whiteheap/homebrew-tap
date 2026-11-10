@@ -4,7 +4,7 @@
 # the four sha256 lines; Homebrew reads the version from the url.
 #
 #   sh .github/update-residue.sh            # the latest release
-#   sh .github/update-residue.sh v0.0.7     # a given tag
+#   sh .github/update-residue.sh v0.0.13    # a given tag, newer than the formula's
 #
 # Each checksum comes from the release's SHA256SUMS. All four archives are
 # downloaded and checked, against SHA256SUMS and against the build-provenance
