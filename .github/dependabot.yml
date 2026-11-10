@@ -1,0 +1,13 @@
+# Keeps the pinned actions current: one grouped pull request a week, which
+# update-residue.yml checks. A release must be a week old before it is proposed.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ["*"]
